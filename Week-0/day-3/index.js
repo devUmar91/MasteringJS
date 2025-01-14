@@ -59,6 +59,9 @@ const arr =[1,2,3,4,5,"donkey","kutta"];
 
 // console.log(arr[Math.round(Math.random()*arr.length)]);
 
+
+
+
 // ................this keyword............
 
 const  hello=()=>{
