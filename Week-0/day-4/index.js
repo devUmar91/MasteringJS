@@ -37,7 +37,7 @@ function Book(title, author, isAvailable) {
   this.isAvailable = isAvailable;
 
   // Add a method to change availability
-  this.changeAvailability = function changeAvailability (availability) {
+  this.changeAvailability = function  (availability) {
     this.isAvailable = availability;
   };
 }
