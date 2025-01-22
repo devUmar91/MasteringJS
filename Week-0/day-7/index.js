@@ -66,3 +66,56 @@ const fetchData = (url) => {
   // Call the function with a valid URL
   fetchAndProcessUsers("https://mockapi.com/users");
   
+
+  // Simulated API calls
+const fetchPosts = () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve([
+          { id: 1, title: "Post One" },
+          { id: 2, title: "Post Two" },
+          { id: 3, title: "Post Three" },
+        ]);
+      }, 2000); // Simulating a 2-second delay
+    });
+  };
+  
+  const fetchComments = (postId) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const comments = {
+          1: ["Comment A", "Comment B"],
+          2: ["Comment C"],
+          3: ["Comment D", "Comment E", "Comment F"],
+        };
+        resolve(comments[postId] || []);
+      }, 1500); // Simulating a 1.5-second delay
+    });
+  };
+  
+  // Async function to fetch posts and their comments
+  const fetchPostsWithComments = async () => {
+    try {
+      console.log("Fetching posts...");
+      const posts = await fetchPosts();
+      console.log("Posts fetched successfully:", posts);
+  
+      const postsWithComments = await Promise.all(
+        posts.map(async (post) => {
+          const comments = await fetchComments(post.id); // Fetch comments for each post
+          return { ...post, comments };
+        })
+      );
+  
+      console.log("Posts with Comments:");
+      console.log(postsWithComments);
+    } catch (error) {
+      console.error("An error occurred:", error);
+    } finally {
+      console.log("Operation complete.");
+    }
+  };
+  
+  // Execute the function
+  fetchPostsWithComments();
+  
