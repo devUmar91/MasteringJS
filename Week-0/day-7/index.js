@@ -1,23 +1,23 @@
 // ...............JavaScript Modules and Error Handling........
- import { addTwoNumbers, fetchData } from "./utills/utills.js";
+//  import { addTwoNumbers, fetchData } from "./utills/utills.js";
 
-const result =addTwoNumbers(1,3)
+// const result =addTwoNumbers(1,3)
 // console.log(result);
 
 
 
-const getData = async () => {
-    const url = "https://dummyjson.com/carts"; // API URL
-    const products = await fetchData(url); // Call the function with the URL
-    console.log(products);
+// const getData = async () => {
+//     const url = "https://dummyjson.com/carts"; // API URL
+//     const products = await fetchData(url); // Call the function with the URL
+//     console.log(products);
     
-    products.carts.map((product)=>{
-        console.log(product);
-        return product
+//     products.carts.map((product)=>{
+//         console.log(product);
+//         return product
         
-    })
-    // console.log(); // Log the products data
-};
+//     })
+//     // console.log(); // Log the products data
+// };
 
 // getData();
 
@@ -64,7 +64,7 @@ const fetchData = (url) => {
   };
   
   // Call the function with a valid URL
-  fetchAndProcessUsers("https://mockapi.com/users");
+//   fetchAndProcessUsers("https://mockapi.com/users");
   
 
   // Simulated API calls
@@ -117,5 +117,88 @@ const fetchPosts = () => {
   };
   
   // Execute the function
-  fetchPostsWithComments();
+//   fetchPostsWithComments();
+  
+
+// Simulated API for users
+const fetchUsers = () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve([
+          { id: 1, name: "Alice" },
+          { id: 2, name: "Bob" },
+        ]);
+      }, 1000);
+    });
+  };
+  
+  // Simulated API for user posts
+  const fetchPostsByUser = (userId) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (Math.random() > 0.8) reject(`Failed to fetch posts for user ${userId}`);
+        else
+          resolve([
+            { postId: 101, title: `Post 101 by User ${userId}` },
+            { postId: 102, title: `Post 102 by User ${userId}` },
+          ]);
+      }, 1500);
+    });
+  };
+  
+  // Simulated API for post details
+  const fetchPostDetails = (postId) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (Math.random() > 0.7) reject(`Failed to fetch details for post ${postId}`);
+        else resolve({ postId, content: `Detailed content for post ${postId}` });
+      }, 1200);
+    });
+  };
+  
+  // Retry logic: Retry an async function up to 'retries' times
+  const withRetry = async (fn, args, retries = 3) => {
+    let attempt = 0;
+    while (attempt < retries) {
+      try {
+        return await fn(...args);
+      } catch (error) {
+        attempt++;
+        console.warn(`Retry ${attempt}/${retries} for function ${fn.name} failed. Error: ${error}`);
+        if (attempt === retries) throw new Error(`All retries failed: ${error}`);
+      }
+    }
+  };
+  
+  // Main function to fetch users, their posts, and post details
+  const fetchUsersWithPostsAndDetails = async () => {
+    try {
+      console.log("Fetching users...");
+      const users = await fetchUsers();
+      console.log("Users fetched successfully:", users);
+  
+      const userPostDetails = await Promise.all(
+        users.map(async (user) => {
+          const posts = await withRetry(fetchPostsByUser, [user.id]);
+          const detailedPosts = await Promise.all(
+            posts.map(async (post) => {
+              const details = await withRetry(fetchPostDetails, [post.postId]);
+              return { ...post, ...details };
+            })
+          );
+          return { ...user, posts: detailedPosts };
+        })
+      );
+  
+      console.log("User Post Details:");
+      console.log(userPostDetails);
+    } catch (error) {
+      console.error("Error during fetching process:", error);
+    } finally {
+      console.log("Process complete.");
+    }
+  };
+  
+  // Execute the function
+  fetchUsersWithPostsAndDetails();
   
