@@ -200,5 +200,17 @@ const fetchUsers = () => {
   };
   
   // Execute the function
-  fetchUsersWithPostsAndDetails();
-  
+//   fetchUsersWithPostsAndDetails();
+const queue = new TaskQueue(2);
+
+const task = (id) => new Promise((resolve) => {
+  setTimeout(() => {
+    console.log(`Task ${id} completed`);
+    resolve();
+  }, 1000);
+});
+
+queue.add(() => task(1));
+queue.add(() => task(2));
+queue.add(() => task(3));
+queue.add(() => task(4));
