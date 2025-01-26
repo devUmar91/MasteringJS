@@ -266,6 +266,48 @@ function spiralOrder(matrix) {
     [7, 8, 9],
   ];
   
-  console.log(spiralOrder(matrix));
+//   console.log(spiralOrder(matrix));
   // Output: [1, 2, 3, 6, 9, 8, 7, 4, 5]
+
+
+//   Problem: Maximum Water Trapped Between Bars
+// You are given an array heights where each element represents the height of a bar. Calculate how much water can be trapped between the bars after it rains.
+  
+
+  function trapWater(heights) {
+    if (heights.length < 3) return 0; // At least 3 bars are needed to trap water.
+  
+    let left = 0; // Pointer starting from the left
+    let right = heights.length - 1; // Pointer starting from the right
+    let leftMax = 0; // Max height on the left
+    let rightMax = 0; // Max height on the right
+    let waterTrapped = 0; // Total water trapped
+  
+    while (left < right) {
+      if (heights[left] < heights[right]) {
+        // Process the left side
+        if (heights[left] >= leftMax) {
+          leftMax = heights[left]; // Update left max
+        } else {
+          waterTrapped += leftMax - heights[left]; // Calculate water trapped
+        }
+        left++;
+      } else {
+        // Process the right side
+        if (heights[right] >= rightMax) {
+          rightMax = heights[right]; // Update right max
+        } else {
+          waterTrapped += rightMax - heights[right]; // Calculate water trapped
+        }
+        right--;
+      }
+    }
+  
+    return waterTrapped;
+  }
+  
+  // Example Usage:
+  const heights = [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1];
+  console.log(trapWater(heights));
+  // Output: 6
   
