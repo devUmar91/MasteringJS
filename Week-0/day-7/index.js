@@ -311,3 +311,36 @@ function spiralOrder(matrix) {
   console.log(trapWater(heights));
   // Output: 6
   
+  function longestUniqueSubstring(s) {
+    let charSet = new Set(); // To store unique characters in the current window
+    let left = 0; // Left pointer of the sliding window
+    let maxLength = 0; // Maximum length of the substring
+  
+    for (let right = 0; right < s.length; right++) {
+      // Shrink the window if a duplicate character is found
+      while (charSet.has(s[right])) {
+        charSet.delete(s[left]);
+        left++;
+      }
+      // Add the current character to the set
+      charSet.add(s[right]);
+      // Update the maximum length
+      maxLength = Math.max(maxLength, right - left + 1);
+    }
+  
+    return maxLength;
+  }
+  
+  // Example Usage:
+  const input = "abcabcbb";
+  console.log(longestUniqueSubstring(input));
+  // Output: 3 (The longest substring is "abc")
+  
+  const input2 = "bbbbb";
+  console.log(longestUniqueSubstring(input2));
+  // Output: 1 (The longest substring is "b")
+  
+  const input3 = "pwwkew";
+  console.log(longestUniqueSubstring(input3));
+  // Output: 3 (The longest substring is "wke")
+  
