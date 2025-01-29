@@ -386,3 +386,42 @@ function spiralOrder(matrix) {
   console.log(threeSum(nums2));
   // Output: [[0, 0, 0]]
   
+  function wordLadder(beginWord, endWord, wordList) {
+    const wordSet = new Set(wordList); // Convert list to a set for fast lookups
+    if (!wordSet.has(endWord)) return 0; // If endWord is not in wordList, no solution
+  
+    let queue = [[beginWord, 1]]; // Queue for BFS, storing [currentWord, steps]
+    
+    while (queue.length) {
+      let [word, steps] = queue.shift(); // Dequeue the first element
+  
+      // If we reached the endWord, return the steps count
+      if (word === endWord) return steps;
+  
+      // Try changing each character of the word
+      for (let i = 0; i < word.length; i++) {
+        for (let c = 97; c <= 122; c++) { // ASCII a-z
+          let newWord = word.slice(0, i) + String.fromCharCode(c) + word.slice(i + 1);
+          if (wordSet.has(newWord)) {
+            queue.push([newWord, steps + 1]); // Push to queue with incremented step count
+            wordSet.delete(newWord); // Remove to prevent revisiting
+          }
+        }
+      }
+    }
+  
+    return 0; // If no transformation is possible
+  }
+  
+  // Example Usage:
+  const beginWord = "hit";
+  const endWord = "cog";
+  const wordList = ["hot", "dot", "dog", "lot", "log", "cog"];
+  
+  console.log(wordLadder(beginWord, endWord, wordList));
+  // Output: 5 (The sequence is: "hit" → "hot" → "dot" → "dog" → "cog")
+  
+  const wordList2 = ["hot", "dot", "dog", "lot", "log"];
+  console.log(wordLadder(beginWord, endWord, wordList2));
+  // Output: 0 (No valid transformation)
+  
