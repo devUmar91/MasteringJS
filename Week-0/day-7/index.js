@@ -425,3 +425,57 @@ function spiralOrder(matrix) {
   console.log(wordLadder(beginWord, endWord, wordList2));
   // Output: 0 (No valid transformation)
   
+
+  class LRUCache {
+    constructor(capacity) {
+      this.capacity = capacity;
+      this.map = new Map(); // Stores key-node pairs
+      this.head = { next: null, prev: null }; // Dummy head
+      this.tail = { next: null, prev: null }; // Dummy tail
+      this.head.next = this.tail;
+      this.tail.prev = this.head;
+    }
+  
+    _remove(node) {
+      node.prev.next = node.next;
+      node.next.prev = node.prev;
+    }
+  
+    _insert(node) {
+      node.next = this.head.next;
+      node.prev = this.head;
+      this.head.next.prev = node;
+      this.head.next = node;
+    }
+  
+    get(key) {
+      if (!this.map.has(key)) return -1;
+      let node = this.map.get(key);
+      this._remove(node);
+      this._insert(node);
+      return node.value;
+    }
+  
+    put(key, value) {
+      if (this.map.has(key)) this._remove(this.map.get(key));
+  
+      let node = { key, value, next: null, prev: null };
+      this.map.set(key, node);
+      this._insert(node);
+  
+      if (this.map.size > this.capacity) {
+        let lru = this.tail.prev;
+        this._remove(lru);
+        this.map.delete(lru.key);
+      }
+    }
+  }
+  
+  // Example Usage:
+  const cache = new LRUCache(2);
+  cache.put(1, 100);
+  cache.put(2, 200);
+  console.log(cache.get(1)); // Output: 100
+  cache.put(3, 300); // Removes key 2
+  console.log(cache.get(2)); // Output: -1 (Not found)
+  
