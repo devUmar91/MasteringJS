@@ -479,3 +479,40 @@ function spiralOrder(matrix) {
   cache.put(3, 300); // Removes key 2
   console.log(cache.get(2)); // Output: -1 (Not found)
   
+
+  function taskScheduler(tasks, limit) {
+    return new Promise((resolve) => {
+      let index = 0;
+      let running = 0;
+      let results = new Array(tasks.length);
+  
+      function runNext() {
+        if (index >= tasks.length && running === 0) {
+          return resolve(results);
+        }
+        while (running < limit && index < tasks.length) {
+          let i = index++;
+          running++;
+          tasks[i]().then((res) => {
+            results[i] = res;
+            running--;
+            runNext();
+          });
+        }
+      }
+      
+      runNext();
+    });
+  }
+  
+  // Example Usage:
+  const tasks = [
+    () => new Promise(res => setTimeout(() => res("Task 1 done"), 3000)),
+    () => new Promise(res => setTimeout(() => res("Task 2 done"), 2000)),
+    () => new Promise(res => setTimeout(() => res("Task 3 done"), 1000)),
+    () => new Promise(res => setTimeout(() => res("Task 4 done"), 4000)),
+  ];
+  
+  taskScheduler(tasks, 2).then(console.log);
+  // Expected Output: ["Task 1 done", "Task 2 done", "Task 3 done", "Task 4 done"]
+  
