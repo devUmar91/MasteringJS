@@ -516,3 +516,43 @@ function spiralOrder(matrix) {
   taskScheduler(tasks, 2).then(console.log);
   // Expected Output: ["Task 1 done", "Task 2 done", "Task 3 done", "Task 4 done"]
   
+  function fetchUser(id) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ id, name: "John Doe" });
+    }, 1000);
+  });
+}
+
+function fetchUserPosts(userId) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve([
+        { postId: 1, title: "First Post" },
+        { postId: 2, title: "Second Post" },
+      ]);
+    }, 1500);
+  });
+}
+
+function getUserWithPosts(id) {
+  return fetchUser(id)
+    .then(user => {
+      return fetchUserPosts(user.id).then(posts => {
+        return { ...user, posts };
+      });
+    });
+}
+
+// Example Usage:
+getUserWithPosts(101).then(console.log);
+/* Expected Output:
+{
+  id: 101,
+  name: "John Doe",
+  posts: [
+    { postId: 1, title: "First Post" },
+    { postId: 2, title: "Second Post" }
+  ]
+}
+*/
