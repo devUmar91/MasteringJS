@@ -556,3 +556,45 @@ getUserWithPosts(101).then(console.log);
   ]
 }
 */
+
+function fetchUser(id) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ id, name: "Alice" });
+    }, 1000);
+  });
+}
+
+function fetchOrders(userId) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve([
+        { orderId: 1, item: "Laptop" },
+        { orderId: 2, item: "Phone" },
+      ]);
+    }, 1500);
+  });
+}
+
+async function getUserWithOrders(userId) {
+  try {
+    const user = await fetchUser(userId);
+    const orders = await fetchOrders(user.id);
+    return { ...user, orders };
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+}
+
+// Example Usage:
+getUserWithOrders(202).then(console.log);
+/* Expected Output:
+{
+  id: 202,
+  name: "Alice",
+  orders: [
+    { orderId: 1, item: "Laptop" },
+    { orderId: 2, item: "Phone" }
+  ]
+}
+*/
